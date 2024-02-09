@@ -1,11 +1,7 @@
-import './assets/main.css'
-
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-
-const app = createApp(App)
-
-app.use(router)
-
-app.mount('#app')
+let app = new Vue({
+    el: '#app',
+    data: {
+        product: "Socks",
+        description: "A pair of warm, fuzzy socks",
+    }
+})
