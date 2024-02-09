@@ -2,6 +2,7 @@ let app = new Vue({
     el: '#app',
     data: {
         product: "Socks",
+        brand: 'Vue Mastery',
         description: "A pair of warm, fuzzy socks",
         image: "src/assets/vmSocks-green-onWhite.jpg",
         altText: "A pair of socks",
@@ -20,6 +21,7 @@ let app = new Vue({
             }
         ],
         cart: 0,
+        onSale: true,
     },
     methods: {
         addToCart() {
@@ -28,5 +30,17 @@ let app = new Vue({
         updateProduct(variantImage) {
             this.image = variantImage
         },
+    },
+    computed: {
+        title() {
+            return this.brand + ' ' + this.product;
+        },
+        sale: function() {
+            if (this.onSale) {
+                return `${this.brand} ${this.product} is on sale!`
+            } else {
+                return `${this.brand} ${this.product} is not on sale.`
+            }
+        }
     }
 })
