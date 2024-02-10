@@ -37,10 +37,8 @@ Vue.component('product', {
               :style="{ backgroundColor:variant.variantColor }"
               @mouseover="updateProduct(variant.variantImage)">
           </div>
-          <div class="cart">
-            <p>Cart({{ cart }})</p>
-          </div>
           <button v-on:click="addToCart" :disabled="!inStock" :class="{ disabledButton: !inStock }">Add to cart</button>
+          <button @click="deleteFromCart">Delete from cart</button>
         </div>
       </div>
  `,
@@ -67,15 +65,20 @@ Vue.component('product', {
                     variantQuantity: 0
                 }
             ],
-            cart: 0,
         }
     },
     methods: {
         addToCart() {
-            this.cart += 1
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
         },
         updateProduct(variantImage) {
             this.image = variantImage
+        },
+        updateCart(id) {
+            this.cart.push(id);
+        },
+        deleteFromCart: function() {
+            this.$emit('delete-from-cart', this.variants[this.selectedVariant].variantId)
         }
     },
     computed: {
@@ -102,6 +105,19 @@ Vue.component('product', {
 let app = new Vue({
     el: '#app',
     data: {
-        premium: true
+        premium: true,
+        cart: []
+    },
+    methods: {
+        updateCart(id) {
+            this.cart.push(id);
+        },
+        deleteItem(id) {
+            for(let i = this.cart.length - 1; i >= 0; i--) {
+                if (this.cart[i] === id) {
+                    this.cart.splice(i, 1);
+                }
+            }
+        }
     }
 })
