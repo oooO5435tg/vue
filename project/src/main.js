@@ -192,6 +192,7 @@ Vue.component('product', {
           <p v-if="inStock">In Stock</p>
           <p v-else style="text-decoration: line-through">Out of Stock</p>
           <info-tabs :shipping="shipping" :details="details"></info-tabs>
+          <p>Average Rating: {{ averageRating }}</p>
           <div
               class="color-box"
               v-for="variant in variants"
@@ -240,13 +241,13 @@ Vue.component('product', {
     },
     methods: {
         addToCart() {
-            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
+          this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
         },
         updateProduct(variantImage) {
-            this.image = variantImage
+          this.image = variantImage
         },
         updateCart(id) {
-            this.cart.push(id);
+          this.cart.push(id);
         },
         deleteFromCart: function() {
           this.$emit('delete-from-cart', this.variants[this.selectedVariant].variantId)
@@ -269,6 +270,17 @@ Vue.component('product', {
           } else {
               return `${this.brand} ${this.product} is not on sale.`
           }
+        },
+        averageRating() {
+          // Вычисляем среднюю оценку
+          if (this.reviews.length === 0) {
+            return "No reviews yet";
+          }
+          let total = 0;
+          for (let review of this.reviews) {
+            total += review.rating;
+          }
+          return (total / this.reviews.length).toFixed(1);
         }
     },
     created() {
@@ -286,7 +298,7 @@ let app = new Vue({
     },
     methods: {
         updateCart(id) {
-            this.cart.push(id);
+          this.cart.push(id);
         },
         deleteItem(id) {
           const index = this.cart.indexOf(id);
