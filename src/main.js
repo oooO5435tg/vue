@@ -185,6 +185,9 @@ Vue.component('product', {
         </div>
         <div class="product-info">
           <h1>{{ title }}</h1>
+          <p>{{ description }}</p>
+          <p>{{ sale }}</p>
+          <a v-bind:href="link">More products like this</a>
           <p v-if="inStock">In Stock</p>
           <p v-else style="text-decoration: line-through">Out of Stock</p>
           <info-tabs :shipping="shipping" :details="details"></info-tabs>
@@ -195,7 +198,11 @@ Vue.component('product', {
               :style="{ backgroundColor:variant.variantColor }"
               @mouseover="updateProduct(variant.variantImage)">
           </div>
+          <div v-for="size in sizes">
+            <p>{{ size }}</p>
+          </div>
           <button v-on:click="addToCart" :disabled="!inStock" :class="{ disabledButton: !inStock }">Add to cart</button>
+          <button @click="deleteFromCart">Delete from cart</button>
           <product-tabs :reviews="reviews"></product-tabs>
         </div>
       </div>
@@ -207,8 +214,11 @@ Vue.component('product', {
             selectedVariant: 0,
             image: "src/assets/vmSocks-green-onWhite.jpg",
             altText: "A pair of socks",
-            inStock: true,
+            link: "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
+            description: "A pair of warm, fuzzy socks",
+            inStock: false,
             details: ['80% cotton', '20% polyester', 'Gender-neutral'],
+            sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
             variants: [
                 {
                     variantId: 2234,
@@ -224,6 +234,7 @@ Vue.component('product', {
                 }
             ],
             reviews: [],
+            onSale: true,
         }
     },
     methods: {
@@ -235,6 +246,9 @@ Vue.component('product', {
         },
         updateCart(id) {
             this.cart.push(id);
+        },
+        deleteFromCart: function() {
+          this.$emit('delete-from-cart', this.variants[this.selectedVariant].variantId)
         }
     },
     computed: {
@@ -247,6 +261,13 @@ Vue.component('product', {
             } else {
                 return 2.99
             }
+        },
+        sale: function() {
+          if (this.onSale) {
+              return `${this.brand} ${this.product} is on sale!`
+          } else {
+              return `${this.brand} ${this.product} is not on sale.`
+          }
         }
     },
     created() {
@@ -260,11 +281,17 @@ let app = new Vue({
     el: '#app',
     data: {
         premium: true,
-        cart: []
+        cart: [],
     },
     methods: {
         updateCart(id) {
             this.cart.push(id);
+        },
+        deleteItem(id) {
+          const index = this.cart.indexOf(id);
+          if (index !== -1) {
+              this.cart.splice(index, 1);
+          }
         }
     }
 })
