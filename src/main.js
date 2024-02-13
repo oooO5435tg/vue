@@ -216,7 +216,7 @@ Vue.component('product', {
             altText: "A pair of socks",
             link: "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
             description: "A pair of warm, fuzzy socks",
-            inStock: false,
+            inStock: true,
             details: ['80% cotton', '20% polyester', 'Gender-neutral'],
             sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
             variants: [
